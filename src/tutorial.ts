@@ -298,3 +298,199 @@ const newState = reducer(5, {
 console.log(newState)
 
 console.log('----------------------------------------------------------------------------') 
+
+interface genericInterface<T> {
+    value: T;
+    getValue: () => T;
+}
+ 
+const genericString : genericInterface<string> = {
+    value: 'Hello World',
+    getValue(){
+        return this.value
+    }
+}
+
+console.log(genericString)
+
+console.log('----------------------------------------------------------------------------') 
+
+
+function generateStringArray( length: number, value: string ) : string[] {
+    return Array(length).fill(value)
+}
+
+console.log(generateStringArray(4, 'franz'))
+
+console.log('----------------------------------------------------------------------------') 
+
+function createArray<T>( length: number, value: T ) : Array<T>{
+    return Array(length).fill(value)
+}
+
+console.log(createArray<string>(3, 'franz'))
+console.log(createArray<number>(2, 100))
+
+console.log('----------------------------------------------------------------------------') 
+
+function processValue<T extends string | number>( value: T) : T {
+    console.log(value)
+    return value
+}
+
+processValue('hello')
+processValue(2)
+
+
+console.log('----------------------------------------------------------------------------') 
+
+type Car = {
+    brand: string;
+    model: string;
+}
+
+const car : Car = {
+    brand: 'ford',
+    model: 'mustang'
+}
+
+type Product = {
+    name: string;
+    price: number;
+}
+
+const product : Product = {
+    name: 'shoes',
+    price: 450
+}
+
+type Student1 = {
+    name: string;
+    age: number;
+}
+
+const student1 : Student1 = {
+    name: 'franz',
+    age: 30
+}
+
+function printName<T extends { name: string} >( value: T) : void { // you can also use UNION extends Student1 | Products
+    console.log(value.name)
+    return 
+}
+
+printName(student1)
+printName(product)
+
+console.log('----------------------------------------------------------------------------') 
+
+
+interface StoreData<T = any> {
+    data: T[]
+}
+
+const storeNumber : StoreData<number> = {
+    data: [1,2,3,4,5]
+}
+
+const randomStuff : StoreData = {
+    data: ['franz', 1]
+}
+
+console.log('----------------------------------------------------------------------------') 
+
+
+const url = 'https://www.course-api.com/react-tours-project';
+
+// WITHOUT TYPESCRIPT
+
+// async function fetchData( url: string){
+//     try {
+//         const response = await fetch(url)
+
+//         if(!response.ok){
+//             throw new Error(`HTTP error status: ${response.status}`)
+//         }
+//         const data = await response.json();
+//         return data
+//     } catch (error) {
+//         const errorMessage = error instanceof Error ? error.message : ' there was an error'
+//         console.log(errorMessage)
+//         return []
+//     }
+// }
+
+// const tours = await fetchData(url)
+// tours.map(( tour: any ) => {
+//     console.log(tour.name)
+// })
+
+type Tour1 = {
+    id: string;
+    name: string;
+    info: string;
+    image: string;
+    price: string;
+}
+
+async function fetchData1( url: string ) : Promise<Tour1[]>{
+    try {
+        const response = await fetch(url)
+        if(!response.ok){
+            throw new Error(`HTTP Error, Status: ${response.status}`)
+        }
+        const data : Tour1[] = await response.json()
+        return data;
+    } catch (error) {
+       const errorMessage =  error instanceof Error ? error.message : 'there was an error'
+       console.log(errorMessage)
+       return []
+    }
+}
+
+const tours1 = await fetchData1(url)
+tours1.map(( tour ) => {
+    console.log(tour.name)
+})
+
+console.log('----------------------------------------------------------------------------') 
+
+// Using ZOD
+
+
+import { z } from 'zod'
+
+const tourSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    info: z.string(),
+    image: z.string(),
+    price: z.string(),
+})
+
+type Tour = z.infer<typeof tourSchema>
+
+async function fetchData( url: string ) : Promise<Tour[]>{
+    try {
+        const response = await fetch(url)
+        if(!response.ok){
+            throw new Error(`HTTP Error, Status: ${response.status}`)
+        }
+        const rawData : Tour[] = await response.json()
+        const result = tourSchema.array().safeParse(rawData)
+
+        if(!result.success){
+            throw new Error(`Invalid Data: ${result.error}`)
+        }
+        return result.data;
+    } catch (error) {
+       const errorMessage =  error instanceof Error ? error.message : 'there was an error'
+       console.log(errorMessage)
+       return []
+    }
+}
+
+const tours = await fetchData(url)
+tours.map(( tour ) => {
+    console.log(tour.name)
+})
