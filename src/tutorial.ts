@@ -458,7 +458,7 @@ console.log('-------------------------------------------------------------------
 // Using ZOD
 
 
-import { z } from 'zod'
+import { number, z } from 'zod'
 
 const tourSchema = z.object({
     id: z.string(),
@@ -494,3 +494,61 @@ const tours = await fetchData(url)
 tours.map(( tour ) => {
     console.log(tour.name)
 })
+
+
+console.log('----------------------------------------------------------------------------') 
+
+class Book {
+
+    public readonly pamagat: string
+    public name: string
+    private checkOut: boolean = false
+    
+    constructor( title: string, author: string ){
+        this.pamagat = title
+        this.name = author
+    }
+    
+    public isCheckOut(){
+        return this.checkOut
+    }
+
+    public  callMethodCheckOut(){
+        this.checkOut = this.toggleCheckedStatus()
+    }
+
+
+    private toggleCheckedStatus(){
+        return !this.checkOut
+    }
+}
+
+const deepWork = new Book('Programming', 'franz')
+// invote the method
+deepWork.callMethodCheckOut()
+
+console.log(deepWork.isCheckOut())
+
+// deepWork.callMethodCheckOut()
+
+// console.log(deepWork)
+// console.log(deepWork.pamagat)
+
+console.log('----------------------------------------------------------------------------') 
+
+
+class Book2 {
+    private checkMate: boolean = false
+
+    constructor(
+        readonly title: string,
+        public author: string,
+        private someValue: number
+    ){}
+
+    public getSomeValue()
+}
+
+const deepWork2 = new Book2('Programming2', 'franzTogonon', 31)
+
+console.log(deepWork2)
