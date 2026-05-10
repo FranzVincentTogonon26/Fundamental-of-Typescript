@@ -536,19 +536,59 @@ console.log(deepWork.isCheckOut())
 
 console.log('----------------------------------------------------------------------------') 
 
+// Using GETTERS and SETTERS
 
 class Book2 {
+
     private checkMate: boolean = false
 
     constructor(
         readonly title: string,
         public author: string,
-        private someValue: number
+        // private someValue: number -> you can add parameters here
     ){}
 
-    public getSomeValue()
+    // public getSomeValue(){
+    //     return this.someValue
+    // }
+
+    get info(){
+        return `${this.title} by ${this.author}`
+    }
+
+    set checkOut( checkOutValue: boolean ){
+         this.checkMate = checkOutValue
+    }
 }
 
-const deepWork2 = new Book2('Programming2', 'franzTogonon', 31)
+const deepWork2 = new Book2('Programming', 'franzTogonon')
 
+// console.log(deepWork2.getSomeValue())
+
+console.log(deepWork2.info)
+
+deepWork2.checkOut = true
 console.log(deepWork2)
+
+console.log('----------------------------------------------------------------------------') 
+
+interface IPerson {
+    name: string;
+    age: number;
+    // greet(): void
+}
+
+class Person implements IPerson {
+    constructor(
+        public name: string,
+        public age: number
+    ){}
+
+    greet(): void {
+        console.log(`My name is ${this.name} my age ${this.age} years`)
+    }
+}
+
+const hipster = new Person('FranzVincentTogonon', 30)
+
+hipster.greet()
